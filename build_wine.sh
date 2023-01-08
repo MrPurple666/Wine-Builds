@@ -81,7 +81,6 @@ export WINE_BUILD_OPTIONS="--without-ldap --without-oss --disable-winemenubuilde
 export BUILD_DIR="${HOME}"/build_wine
 
 # Change these paths to where your Ubuntu bootstraps reside
-export BOOTSTRAP_X64=/opt/chroots/bionic64_chroot
 export BOOTSTRAP_X32=/opt/chroots/bionic32_chroot
 
 export scriptdir="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
@@ -268,27 +267,7 @@ if ! command -v bwrap 1>/dev/null; then
 	exit 1
 fi
 
-if [ ! -d "${BOOTSTRAP_X64}" ] || [ ! -d "${BOOTSTRAP_X32}" ]; then
-	clear
-	echo "Bootstraps are required for compilation!"
-	exit 1
-fi
-
-BWRAP64="build_with_bwrap 64"
 BWRAP32="build_with_bwrap 32"
-
-export CROSSCC="${CROSSCC_X64}"
-export CROSSCXX="${CROSSCXX_X64}"
-export CFLAGS="${CFLAGS_X64}"
-export CXXFLAGS="${CFLAGS_X64}"
-export CROSSCFLAGS="${CROSSCFLAGS_X64}"
-export CROSSCXXFLAGS="${CROSSCFLAGS_X64}"
-
-mkdir "${BUILD_DIR}"/build64
-cd "${BUILD_DIR}"/build64
-${BWRAP64} "${BUILD_DIR}"/wine/configure --enable-win64 ${WINE_BUILD_OPTIONS} --prefix "${BUILD_DIR}"/wine-${BUILD_NAME}-amd64
-${BWRAP64} make -j$(nproc)
-${BWRAP64} make install
 
 export CROSSCC="${CROSSCC_X32}"
 export CROSSCXX="${CROSSCXX_X32}"
